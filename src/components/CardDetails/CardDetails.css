@@ -1,0 +1,38 @@
+.card {
+  transition: transform 450ms;
+  background-color: black;
+}
+.card:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.card > img {
+  max-width: 90%;
+  height: 8vw;
+  border-radius: 0.15rem;
+
+  z-index: 100;
+}
+.title {
+  margin-top: 5px;
+  text-align: center;
+}
+@media only screen and (max-width: 1300px) {
+  .card > img {
+    width: 90%;
+    height: 9vw;
+  }
+  .title {
+    font-size: medium;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .card > img {
+    width: 90%;
+    height: 9vh;
+  }
+  .title {
+    font-size: small;
+  }
+}
