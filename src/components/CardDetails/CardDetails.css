@@ -1,6 +1,9 @@
 .card {
   transition: transform 450ms;
   background-color: black;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
 }
 .card:hover {
   cursor: pointer;
@@ -8,14 +11,14 @@
 }
 
 .card > img {
-  max-width: 90%;
+  max-width: 95%;
+  border-radius: 5px;
   height: 8vw;
-  border-radius: 0.15rem;
 
-  z-index: 100;
+  z-index: 1000;
 }
 .title {
-  margin-top: 5px;
+  margin-top: 7px;
   text-align: center;
 }
 @media only screen and (max-width: 1300px) {

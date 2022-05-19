@@ -35,7 +35,7 @@
   .banner_details {
     width: 100%;
     margin: auto;
-    padding: 10px;
+    padding: 4rem;
   }
   .banner_details > h1 {
     font-size: xx-large;
@@ -48,7 +48,7 @@
   .banner_details {
     width: 100%;
     margin: auto;
-    padding: 10px;
+    padding: 2rem;
   }
   .banner_details > h1 {
     font-size: larger;

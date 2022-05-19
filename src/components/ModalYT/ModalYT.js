@@ -1,6 +1,6 @@
 import React from "react";
 import ReactPlayer from "react-player";
-import { Icon, Modal } from "web3uikit";
+import { Modal } from "web3uikit";
 import "./ModalYT.css";
 function ModalYT({ open, setOpen, trailerId }) {
   return (

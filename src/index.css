@@ -1,4 +1,6 @@
-@import "react-alice-carousel/lib/alice-carousel.css";
+@import "slick-carousel/slick/slick.css"; 
+@import "slick-carousel/slick/slick-theme.css";
+
 * {
   padding: 0;
   margin: 0;

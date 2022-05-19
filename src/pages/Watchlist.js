@@ -2,36 +2,77 @@ import { Container, Grid } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useMoralis } from "react-moralis";
-import { useNavigate } from "react-router-dom";
+import ReactLoading from "react-loading";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import CardDetails from "../components/CardDetails/CardDetails";
 const Watchlist = () => {
-  const { isAuthenticated, Moralis, account } = useMoralis();
+  const contractProcessor = useWeb3ExecuteFunction();
+  const { account } = useMoralis();
   const [list, setList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchList = async () => {
-    setList(await Moralis.Cloud.run("getMyList", { addrs: account }));
+    setIsLoading(true);
+    let options = {
+      contractAddress: process.env.REACT_APP_SMART_CONTRACT_ADDRESS,
+      functionName: "getWatchList",
+      abi: [
+        {
+          inputs: [],
+          name: "getWatchList",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "string",
+                  name: "id",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "typeOfVideo",
+                  type: "string",
+                },
+              ],
+              internalType: "struct Netflix.content[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      params: {},
+    };
+    const data = await contractProcessor.fetch({
+      params: options,
+    });
+
+    setList(data);
+    setIsLoading(false);
   };
-  const navigate = useNavigate();
+
   useEffect(() => {
     fetchList();
-    // console.log(list);
-    return () => {};
   }, [account]);
 
   return (
-    <>
-      <Container maxWidth="xl" sx={{ mt: "5ch" }}>
+    <Container
+      maxWidth="xl"
+      sx={{ mt: "5vh", display: "flex", justifyContent: "center" }}
+    >
+      {isLoading ? (
+        <ReactLoading type="bubbles" color="red" height={200} width={100} />
+      ) : (
         <Grid container spacing={1}>
           {list?.map((l, i) => (
-            <>
-              <Grid items sm={12} md={4} lg={2}>
-                <CardDetails id={l.id} type={l.type} key={i} />
-              </Grid>
-            </>
+            <Grid items sm={12} md={4} lg={2}>
+              <CardDetails id={l.id} type={l.typeOfVideo} key={i} />
+            </Grid>
           ))}
         </Grid>
-      </Container>
-    </>
+      )}
+    </Container>
   );
 };
 

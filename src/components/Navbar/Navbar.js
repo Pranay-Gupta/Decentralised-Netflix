@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Navbar.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ConnectButton, useNotification } from "web3uikit";
 import { useMoralis } from "react-moralis";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useTheme } from "@mui/material/styles";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useMediaQuery } from "@mui/material";
 function Navbar() {
@@ -14,14 +13,12 @@ function Navbar() {
   const home = location.pathname === "/";
   const movies = location.pathname === "/movies";
   const series = location.pathname === "/series";
+  const search = location.pathname === "/search";
   const watchlist = location.pathname === "/watchlist";
-  const morla = useMoralis();
-  const theme = useTheme();
+
   const isMobile = useMediaQuery("(max-width:1400px)");
 
-  const navigate = useNavigate();
-
-  const { isAuthenticated } = useMoralis();
+  const { account } = useMoralis();
 
   const dispatch = useNotification();
 
@@ -74,7 +71,13 @@ function Navbar() {
               >
                 Series
               </Link>
-              {isAuthenticated ? (
+              <Link
+                className={`${search ? "current" : "navbar_link"}`}
+                to="/search"
+              >
+                Search
+              </Link>
+              {account ? (
                 <Link
                   className={`${watchlist ? "current" : "navbar_link"}`}
                   to="/watchlist"
@@ -119,11 +122,31 @@ function Navbar() {
             Series
           </Link>
           <Link
-            className={`${watchlist ? "mobile_current" : "mobile_navbar_link"}`}
-            to="/watchlist"
+            className={`${search ? "mobile_current" : "mobile_navbar_link"}`}
+            to="/search"
           >
-            Watchlist
+            Search
           </Link>
+          {account ? (
+            <Link
+              className={`${
+                watchlist ? "mobile_current" : "mobile_navbar_link"
+              }`}
+              to="/watchlist"
+            >
+              Watchlist
+            </Link>
+          ) : (
+            <Link
+              onClick={handleNewNotification}
+              className={`${
+                watchlist ? "mobile_current" : "mobile_navbar_link"
+              }`}
+              to="#"
+            >
+              Watchlist
+            </Link>
+          )}
         </div>
       )}
     </>

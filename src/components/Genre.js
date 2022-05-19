@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Chip } from "@mui/material";
+import { Box, Chip, useMediaQuery } from "@mui/material";
 
 import { getGenres } from "../Api";
 
@@ -18,6 +18,7 @@ function Genre({
     setPage(1);
     setContent([]);
   };
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleRemove = (genre) => {
     setSelectedGenres(
@@ -43,6 +44,7 @@ function Genre({
           key={genre.id}
           color="error"
           onDelete={() => handleRemove(genre)}
+          size={isMobile ? "small" : ""}
         />
       ))}
       {genres.map((genre) => (
@@ -52,6 +54,7 @@ function Genre({
           key={genre.id}
           color="error"
           variant="outlined"
+          size={isMobile ? "small" : ""}
           onClick={() => handleAdd(genre)}
         />
       ))}

@@ -1,17 +1,16 @@
+import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "web3uikit";
 import { getDetails } from "../../Api";
-import ModalYT from "../ModalYT/ModalYT";
 import "./CardDetails.css";
-function CardDetails({ id, type }) {
+function CardDetails({ id, type, carousel }) {
   const [content, setContent] = useState([]);
   useEffect(() => {
     getDetails(id, type).then((data) => {
       setContent(data);
     });
   }, [id, type]);
-  const [visible, setVisible] = useState(true);
+
   const imageUrl = `https://image.tmdb.org/t/p/original/${content.poster_path}`;
 
   const navigate = useNavigate();
@@ -21,12 +20,35 @@ function CardDetails({ id, type }) {
 
   return (
     <>
-      <div className="main" onClick={loadDetails}>
-        <div className="card">
-          <img src={imageUrl} alt="" />
+      {carousel ? (
+        <Tooltip title={content.name || content.title} arrow>
+          <div
+            className="main"
+            onClick={loadDetails}
+            sx={{ position: "relative" }}
+          >
+            <div className="card">
+              <img src={imageUrl} alt="" style={{ objectFit: "cover" }} />
+            </div>
+            {/* <p className="title" sx={{ position: "absolute", top: 0 }}>
+     {content.name || content.title}
+   </p> */}
+          </div>
+        </Tooltip>
+      ) : (
+        <div
+          className="main"
+          onClick={loadDetails}
+          sx={{ position: "relative" }}
+        >
+          <div className="card">
+            <img src={imageUrl} alt="" style={{ objectFit: "cover" }} />
+          </div>
+          <p className="title" sx={{ position: "absolute", top: 0 }}>
+            {content.name || content.title}
+          </p>
         </div>
-        <p className="title">{content.name || content.title}</p>
-      </div>
+      )}
     </>
   );
 }

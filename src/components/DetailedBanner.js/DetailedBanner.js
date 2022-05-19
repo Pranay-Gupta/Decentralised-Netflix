@@ -1,7 +1,6 @@
 import { Rating, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
-import { useNavigate } from "react-router-dom";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { Button, useNotification } from "web3uikit";
 import { getTrailerID } from "../../Api";
 import ModalYT from "../ModalYT/ModalYT";
@@ -20,9 +19,8 @@ function DetailedBanner({ id, type, content }) {
     });
   }, [id, type]);
 
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuthenticated, Moralis, account } = useMoralis();
+  const { isAuthenticated } = useMoralis();
 
   const dispatch = useNotification();
 
@@ -42,14 +40,48 @@ function DetailedBanner({ id, type, content }) {
       position: "topL",
     });
   };
-  const currentVideo = { id, type };
-  const addToWatchlist = async () => {
+
+  //*****************************Blockchain functionalities ****************************
+  const contractProcessor = useWeb3ExecuteFunction();
+
+  const addWatchlist = async (id, typeOfVideo) => {
     setIsLoading(true);
-    await Moralis.Cloud.run("updateMyList", {
-      addrs: account,
-      newFav: currentVideo,
+    let options = {
+      contractAddress: process.env.REACT_APP_SMART_CONTRACT_ADDRESS,
+      functionName: "addToWatchList",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "id",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "typeOfVideo",
+              type: "string",
+            },
+          ],
+          name: "addToWatchList",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      params: {
+        id,
+        typeOfVideo,
+      },
+    };
+
+    await contractProcessor.fetch({
+      params: options,
+      onSuccess: () => {
+        handleAddNotification();
+      },
     });
-    handleAddNotification();
+
     setIsLoading(false);
   };
   return (
@@ -146,7 +178,7 @@ function DetailedBanner({ id, type, content }) {
                   isTransparent={true}
                   disabled={isLoading}
                   icon="plus"
-                  onClick={addToWatchlist}
+                  onClick={() => addWatchlist(id, type)}
                   text="Add to Watchlist"
                   theme="outline"
                   type="button"

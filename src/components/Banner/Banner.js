@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography } from "web3uikit";
+import { Button } from "web3uikit";
 import { getTrailerID, getTrending } from "../../Api";
 import ModalYT from "../ModalYT/ModalYT";
 import "./Banner.css";

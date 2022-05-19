@@ -4,10 +4,10 @@ import { Box } from "@mui/system";
 import { getGenres, getSeries } from "../Api";
 import useGenreId from "../components/hooks/useGenreId";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { CircularProgress, Container, Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import SinglePage from "../components/SinglePage";
 import Genre from "../components/Genre";
-
+import ReactLoading from "react-loading";
 function Series() {
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -25,8 +25,6 @@ function Series() {
     getSeries(genreId, page).then((data) => {
       setContent([...content, data?.results]);
       setTotalPages(data?.total_pages);
-
-      console.log({ genreId });
     });
   }, [genreId, page]);
   const nextData = () => {
@@ -38,7 +36,7 @@ function Series() {
   };
 
   return (
-    <>
+    <Container maxWidth="xl">
       <Typography
         variant="h4"
         color="white"
@@ -55,9 +53,6 @@ function Series() {
           mb: "5vh",
         }}
       >
-        <Typography variant="body1" color="white" sx={{ mr: 2 }}>
-          Filter By:
-        </Typography>
         <Genre
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
@@ -75,20 +70,20 @@ function Series() {
         hasMore={hasMore}
         style={{ overflow: "hidden" }}
         loader={
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <CircularProgress color="error" size={80} />
-          </Box>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading type="bubbles" color="red" height={200} width={100} />
+          </div>
         }
       >
         <Container maxWidth="xl">
-          <Grid container spacing={2}>
+          <Grid container spacing={0}>
             {content?.map((video) => (
               <SinglePage content={video} key={video.id} type="tv" />
             ))}
           </Grid>
         </Container>
       </InfiniteScroll>
-    </>
+    </Container>
   );
 }
 

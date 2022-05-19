@@ -5,7 +5,7 @@ function SinglePage({ content, type }) {
   return (
     <>
       {content?.map((video) => (
-        <Grid item sm={12} md={4} lg={2}>
+        <Grid item xs={4} md={3} lg={2}>
           <CardDetails
             key={video.id}
             id={video.id}

@@ -5,17 +5,29 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { MoralisProvider } from "react-moralis";
 import { NotificationProvider } from "web3uikit";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { red } from "@mui/material/colors";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: red[500],
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
     <MoralisProvider
-      appId="ZkLMnslYvnCP7iKMjaJ9arbN12YZxFvcPD0M91zI"
-      serverUrl=" https://wabgmoqnuh9i.usemoralis.com:2053/server"
+      appId={process.env.REACT_APP_MORALIS_APP_ID}
+      serverUrl={process.env.REACT_APP_MORALIS_SERVER_URL}
     >
       <NotificationProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
       </NotificationProvider>
     </MoralisProvider>
   </React.StrictMode>,
